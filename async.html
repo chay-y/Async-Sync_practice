@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function sleep(ms){
+            return new Promise (resolve => setTimeout(resolve, ms));
+        }
+
+        async function process(){
+            console.log("안녕하세요!!!!!!!!!!!!")
+            sleep(1000);
+            console.log("신나는 금요일이에여어어어어어어어엉")
+        }
+
+        process().then(()=>{
+            console.log("끝!!!")
+        })
+
+
+        async function showChart() {
+
+                let token = $("meta[name='_csrf']").attr("content");
+                let header = $("meta[name='_csrf_header']".attr("content"));
+
+                //삭제 요청을 보낼 url설정
+                let url = "/cart/orders";
+                
+            try{
+                //비동기 작업 처리
+                const response = await fetch(url,{
+                    method: 'GET',
+                    headers: {
+                        //요청 본문이 JSON 형식임을 명시
+                        'Content-Type' : 'application/json',
+                        [header]:token
+                    },
+             
+                    cache: 'no-cache'
+                })
+
+                //요청이 성공적으로 처리되었다면 ...
+                if(response.status == 401){
+                    alert("로그인 후 이용해주세요");
+                    location.href="/members/login"
+                }
+
+                if(!response.ok){
+                    //서버에서 반환된 텍스트(오류메세지)를 읽어서 알림창에 표시
+                    let errorText = await response.text();
+                    alert(errorText.message);
+                }
+
+                const responseData = await response.json();
+
+                if(!responseData || responseData.length ==0){
+                    throw new Error("자료를 받아오지 못했습니다.")
+                }
+
+                const orderCounts = responseData;
+
+                const labals = orderCounts.map(item => fDate(new Date(item.orderDate)));
+                const chartData = orderCounts.map(item => item.count);
+
+                const ctx = document.getElementById('myChart').getcontext('2d');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labals: labals,
+                        datasets: [{
+                            label:'주문수량',
+                            data: chartData,
+                            backgroundColor: 'rgb(120,144,22)',
+                            borderColor: 'rgb(80,69,179)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales:{
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                })
+
+            }catch(error){
+                alert(error.message);
+            }
+
+        }
+
+        function fDate(date){
+            const year = date.getFullYear();
+            const month = date.getMonth()+1;
+            const day = date.getDate();
+            return year + "-" + month + "-" + day;
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            showChart();
+        })
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

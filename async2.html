@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function sleep(ms){
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        const dog = async() => {
+            await sleep(1000);
+            return "멍멍이";
+        }
+        
+        const cat = async() => {
+            await sleep(500);
+            return "야옭";
+        }
+        
+        const cow = async() => {
+            await sleep(3000);
+            return "음먺";
+        }
+
+        async function process(){
+            // const d = await dog();
+            // console.log(d);
+
+            // const c = await cat();
+            // console.log(c);
+
+            // const w = await cow();
+            // console.log(w);
+
+            const [d, c, w] = await Promise.all([dog(),cat(),cow()]);
+            console.log(d);
+            console.log(c);
+            console.log(w);
+
+        }
+
+        process();
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

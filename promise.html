@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+        const myPromise = new Promise(()=>{
+            //비동기 작업
+            setTimeout(()=>{
+                const text = prompt("'abc'를 입력하면 통과! 아니면 실패.")
+
+                if (text == 'abc'){
+                    return "통과";
+                }else{
+                    return "실패"
+                }
+            },2000)
+        }); 
+
+        myPromise
+            .then((result) => {
+                console.log('result: ', result)
+            })
+            .catch((err) => {
+                console.log('err: ', err)
+            })
+            .finally(() => {
+                console.log('finally~!')
+            })
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
